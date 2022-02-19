@@ -2,11 +2,11 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import filters, mixins
-# from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework.pagination import LimitOffsetPagination
 
 from posts.models import Comment, Group, Follow, Post
+from .mixins import ListCreateMixin
 from .serializers import (
     CommentSerializer,
     GroupSerializer,
@@ -49,15 +49,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         return post.comments.all()
 
 
-class ListCreateMixin(mixins.CreateModelMixin,
-                      mixins.ListModelMixin,
-                      viewsets.GenericViewSet):
-    """
-    Миксин для списка и создания
-    """
-    pass
-
-
 class FollowViewSet(ListCreateMixin):
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
@@ -66,15 +57,14 @@ class FollowViewSet(ListCreateMixin):
     http_method_names = ['get', 'post']
 
     def perform_create(self, serializer):
-        if serializer.is_valid():
-            serializer.save(
+        serializer.save(
                 user=self.request.user,
             )
 
     def get_queryset(self):
-        queryset = Follow.objects.filter(
-            user=self.request.user)
-        return queryset
+        following = Follow.objects.filter( 
+            user=self.request.user) 
+        return following
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
