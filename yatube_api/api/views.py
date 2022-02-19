@@ -58,12 +58,12 @@ class FollowViewSet(ListCreateMixin):
 
     def perform_create(self, serializer):
         serializer.save(
-                user=self.request.user,
-            )
+            user=self.request.user,
+        )
 
     def get_queryset(self):
-        following = Follow.objects.filter( 
-            user=self.request.user) 
+        following = Follow.objects.filter(
+            user=self.request.user)
         return following
 
 
