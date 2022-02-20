@@ -37,7 +37,6 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    # permission_classes = [IsAuthenticated]
     filter_backends = [filters.SearchFilter]
 
     def perform_create(self, serializer):
@@ -70,7 +69,6 @@ class FollowViewSet(ListCreateMixin):
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GroupSerializer
     queryset = Group.objects.all()
-    # permission_classes = (IsAuthenticated)
     http_method_names = ['get', 'post']
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'slug']
